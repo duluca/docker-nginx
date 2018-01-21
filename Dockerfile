@@ -1,5 +1,4 @@
-FROM nginx:1.10.2
-MAINTAINER Kyle Mathews "mathews.kyle@gmail.com"
+FROM nginx:1.13.8-alpine
 
 RUN rm /etc/nginx/nginx.conf /etc/nginx/mime.types
 COPY nginx.conf /etc/nginx/nginx.conf
