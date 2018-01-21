@@ -1,11 +1,12 @@
-docker-nginx
-============
+# docker-nginx
 
-A high-performance Nginx base image for Docker to serve static websites. It will serve anything in the `/var/www` directory.
+> Forked from kyma/docker-nginx
+
+A high-performance Alpine-based Nginx base image for Docker to serve static websites. It will serve anything in the `/var/www` directory.
 
 To build a Docker image for your site, you'll need to create a `Dockerfile`. For example, if your site is in a directory called `src/`, you could create this `Dockerfile`:
 
-    FROM kyma/docker-nginx
+    FROM duluca/minimal-nginx-web-server
     COPY src/ /var/www
     CMD 'nginx'
 
@@ -19,12 +20,7 @@ Then build and run it:
     $ curl localhost
     ...
 
-Docker Hub
-----------
-The trusted build information can be found on the Docker Hub at https://registry.hub.docker.com/u/kyma/docker-nginx/.
-
-SSL
----
+## SSL
 
 To use SSL, put your certs in `/etc/nginx/ssl` and enable the `default-ssl` site:
 
@@ -37,15 +33,13 @@ When you run it, you'll want to make port 443 available, e.g.:
     $ docker run -p 80:80 -p 443:443 -d mysite
 
 
-nginx.conf
----------
+## nginx.conf
 
 The nginx.conf and mime.types are pulled with slight modifications from
 the h5bp Nginx HTTP server boilerplate configs project at
 https://github.com/h5bp/server-configs-nginx
 
-Customized configs
-------------------
+## Customized configs
 
 To modify the NGINX config, you would just create a custom Dockerfile like the following
 where you copy in your modified config files.
@@ -58,7 +52,7 @@ where you copy in your modified config files.
 # docker build -t CONTAINERNAME .
 
 # Build from this repo's image
-FROM kyma/docker-nginx
+FROM duluca/minimal-nginx-web-server
 
 # Example if you wanna swap the default server file.
 COPY path/to/your/default /etc/nginx/sites-enabled/default
@@ -68,3 +62,8 @@ COPY src/ /var/www
 
 CMD 'nginx'
 ```
+
+## For Developers
+
+### Build & Publish
+Execute `./publish.sh`
