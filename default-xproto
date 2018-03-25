@@ -1,0 +1,74 @@
+server {
+    listen   80;
+    listen   [::]:80;
+
+    root /var/www;
+    index index.html index.htm;
+
+    # Make site accessible from http://localhost/
+    server_name localhost;
+    return 301 https://$server_name$request_uri;
+
+    # Add 1 week expires header for static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        expires 1w;
+    }
+
+    location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to redirecting to index.html
+        try_files $uri $uri/ /index.html;
+    }
+
+    # If nginx can't find a file, fallback to the homepage.
+    location @root {
+        rewrite .* / redirect;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme
+    }
+
+    location /healthCheck {
+        check_status;
+    }
+
+    include /etc/nginx/basic.conf;
+}
+server {
+    listen   443;
+
+    root /var/www;
+    index index.html index.htm;
+
+    # Make site accessible from http://localhost/
+    server_name localhost;
+
+    # Add 1 week expires header for static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        expires 1w;
+    }
+
+    location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to redirecting to index.html
+        try_files $uri $uri/ /index.html;
+    }
+
+    # If nginx can't find a file, fallback to the homepage.
+    location @root {
+        rewrite .* / redirect;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme
+    }
+
+    include /etc/nginx/basic.conf;
+}
