@@ -1,4 +1,4 @@
-FROM nginx:1.13.8-alpine
+FROM nginx:1.13.12-alpine
 
 RUN rm /etc/nginx/nginx.conf /etc/nginx/mime.types
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -16,4 +16,3 @@ COPY default-xproto /tmp
 EXPOSE 80 443
 
 CMD ["nginx"]
-
